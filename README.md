@@ -24,6 +24,7 @@ test: 123
 // com/example/config/Config.kt
 package com.example.config
 
+import org.int100.configuration.delegates.Property
 import org.int100.configuration.EConfigFileLoaders
 
 @Config(configPath="config.yml", formats=[EConfigFileLoaders.YAML])
