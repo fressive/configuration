@@ -7,6 +7,9 @@ package org.int100.configuration
  */
 interface IConfigLoader {
 
+    /**
+     * Calls on config file isn't exist
+     */
     fun onConfigNotExists(): Boolean = true
 
 }

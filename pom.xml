@@ -12,7 +12,7 @@
 
     <groupId>org.int100</groupId>
     <artifactId>configuration</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
 
     <name>configuration</name>
     <description>An useful configuration library.</description>
@@ -33,7 +33,7 @@
     </scm>
 
     <properties>
-        <kotlin.version>1.2.41</kotlin.version>
+        <kotlin.version>1.3.10</kotlin.version>
     </properties>
 
     <developers>
@@ -75,6 +75,12 @@
             <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

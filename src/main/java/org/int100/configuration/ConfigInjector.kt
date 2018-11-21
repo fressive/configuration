@@ -3,7 +3,6 @@ package org.int100.configuration
 import com.esotericsoftware.reflectasm.MethodAccess
 import org.int100.configuration.annotations.Config
 import org.int100.configuration.delegates.Property
-import org.int100.configuration.exceptions.TypeNonconformingException
 import org.reflections.Reflections
 import java.io.File
 
@@ -15,12 +14,12 @@ import java.io.File
 object ConfigInjector {
 
     /**
-     * Inject all configs into classes under [package].
+     * Inject all configs(from [classLoader]) into classes under [package].
      */
     @Suppress("UNCHECKED_CAST")
-    fun injectConfigs(`package`: String) {
-        val ref = Reflections(`package`)
-        ref.getTypesAnnotatedWith(Config::class.java).forEach {
+    fun injectConfigs(`package`: String, classLoader: ClassLoader = ClassLoader.getSystemClassLoader()) {
+        val ref = Reflections(`package`, classLoader)
+        ref.getTypesAnnotatedWith(Config::class.java).forEach { it ->
             val annotation = it.getAnnotation(Config::class.java)
 
             var configFile: File? = null
@@ -48,7 +47,7 @@ object ConfigInjector {
             // kotlin 会在委托变量后增加 $delegate
             it.declaredFields.filter { it.name.endsWith("${"$"}delegate") }.forEach fe@{ f ->
                 f.isAccessible = true
-                // 设置访问性
+                // 设置可访问性
                 val instance = instancesMap.getOrPut(it.name){ it.declaredFields.filter { it.name == "INSTANCE" }[0] }
                 val ins = f.get(instance) as Property<*>
                 // 获取委托实例
@@ -56,7 +55,7 @@ object ConfigInjector {
                 config[ins.name] ?: return@fe
                 // 如果没有该属性，跳过以免覆盖默认值
 
-                if (!ins.value!!::class.isInstance(config[ins.name])) throw TypeNonconformingException(config[ins.name]!!, ins.value!!::class.java)
+                if (!ins.value!!::class.isInstance(config[ins.name])) throw TypeCastException("Cannot cast ${ins.value!!::class.simpleName} to ${config[ins.name]!!::class.simpleName}")
                 // 判断类型是否相等
 
                 MethodAccess.get(Property::class.java).invoke(ins, "setValueByReflection", config[ins.name])

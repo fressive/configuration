@@ -1,14 +1,24 @@
 # Configuration
 
-Written by Kotlin, use for Kotlin.
+Configure some configurations.
 
 ## Install
-### From Maven
+### From Maven(JitPack)
+Add the JitPack repository to your `pom.xml`:
+```xml
+<repositories>
+	<repository>
+		<id>jitpack.io</id>
+		<url>https://www.jitpack.io</url>
+	</repository>
+</repositories>
+```
+Add the dependency in `dependencies`.
 ```xml
 <dependency>
-    <groupid>org.int100</groupid>
+    <groupId>com.github.int100</groupId>
     <artifactId>configuration</artifactId>
-    <version>LATEST</version>
+    <version>{LATEST_VERSION}</version>
 </dependency>
 ```
 
@@ -46,4 +56,6 @@ fun main(args: Array<String>) {
 ```
 
 ## License
-Configuration licensed under the MIT License.
+Configuration licensed under **the MIT License**.
+
+For more details, see [LICENSE](LICENSE).
