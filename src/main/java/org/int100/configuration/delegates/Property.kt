@@ -1,6 +1,5 @@
 package org.int100.configuration.delegates
 
-import org.int100.configuration.exceptions.CannotModifyFieldValueException
 import kotlin.reflect.KProperty
 
 /**
@@ -23,11 +22,11 @@ class Property <T> (
     }
 
     @Suppress("UNCHECKED_CAST")
-    inline operator fun <reified K> setValue(ref: Any, property: KProperty<*>, any: K) {
+    operator fun <K> setValue(ref: Any, property: KProperty<*>, any: K) {
         if (canModify)
             value = any as T
         else
-            throw CannotModifyFieldValueException(ref::class.java.simpleName, (any as Any)::class.java.simpleName, any as Any)
+            throw IllegalAccessException()
     }
 
     fun setValueByReflection(any: T) {
