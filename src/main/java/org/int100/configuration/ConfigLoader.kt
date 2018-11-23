@@ -65,7 +65,16 @@ class ConfigLoader (
      * Create config on the config is not exists.
      */
     private fun existsOrCreate() {
-        this.file.takeUnless { it.exists() }?.takeIf { callback.onConfigNotExists() }?.apply { this.createNewFile(); this.writeText(this@ConfigLoader.format.default()) }
+        if (!file.parentFile.exists()) {
+            file.parentFile.mkdirs()
+        }
+
+        if (!file.exists()) {
+            if (callback.onConfigNotExists()) {
+                file.createNewFile()
+                file.writeText(this.format.default())
+            }
+        }
     }
 
     /**
