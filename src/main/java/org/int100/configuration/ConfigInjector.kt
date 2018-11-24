@@ -49,17 +49,19 @@ object ConfigInjector {
                 f.isAccessible = true
                 // 设置可访问性
                 val instance = instancesMap.getOrPut(it.name){ it.declaredFields.filter { it.name == "INSTANCE" }[0] }
-                val ins = f.get(instance) as Property<*>
+                val ins = f.get(instance) as Property<Any>
                 // 获取委托实例
 
                 config[ins.name] ?: return@fe
                 // 如果没有该属性，跳过以免覆盖默认值
 
-                if (!ins.value!!::class.isInstance(config[ins.name])) throw TypeCastException("Cannot cast ${ins.value!!::class.simpleName} to ${config[ins.name]!!::class.simpleName}")
+                if (!ins.value::class.isInstance(config[ins.name])) throw TypeCastException("Cannot cast ${ins.value::class.simpleName} to ${config[ins.name]!!::class.simpleName}")
                 // 判断类型是否相等
 
                 MethodAccess.get(Property::class.java).invoke(ins, "setValueByReflection", config[ins.name])
                 // 更改委托值
+
+                ins.onLoaded(config[ins.name]!!)
             }
         }
 
