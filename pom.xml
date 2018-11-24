@@ -6,7 +6,7 @@
 
     <groupId>org.int100</groupId>
     <artifactId>configuration</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.4-alpha</version>
 
     <name>configuration</name>
     <description>An useful configuration library.</description>
