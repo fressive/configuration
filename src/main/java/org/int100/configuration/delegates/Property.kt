@@ -13,7 +13,9 @@ class Property <T> (
         /** default value */
         defaultValue: T,
         /** can modify by `setValue`*/
-        val canModify: Boolean = false
+        val canModify: Boolean = false,
+        /** call after loaded */
+        val onLoaded: (T) -> (Unit) = {}
 ) {
     var value = defaultValue
 
