@@ -1,6 +1,6 @@
 package org.int100.configuration.annotations
 
-import org.int100.configuration.EConfigFileLoaders
+import org.int100.configuration.ConfigFileLoaders
 
 /**
  * Annotation for config class.
@@ -10,9 +10,11 @@ import org.int100.configuration.EConfigFileLoaders
 @Target(AnnotationTarget.CLASS)
 annotation class Config (
         /** Config path */
-        val configPath: String,
+    val configPath: String,
+        /** Config name */
+    val name: String,
         /** Support config formats. If there are multiple supported formats, default use the first format. */
-        val formats: Array<EConfigFileLoaders>,
+    val formats: Array<ConfigFileLoaders>,
         /** Default config node. Multiple nodes split with `.`. */
-        val node: String = ""
+    val node: String = ""
 )

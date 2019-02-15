@@ -1,9 +1,9 @@
 # Configuration
 
-Configure some configurations.
+A simple, lightweight and useful configuration library.
 
 ## Install
-### From Maven(JitPack)
+### Add dependency (Maven)
 Add the JitPack repository to your `pom.xml`:
 ```xml
 <repositories>
@@ -21,40 +21,51 @@ Add the dependency in `dependencies`.
     <version>{LATEST_VERSION}</version>
 </dependency>
 ```
-
 ## Example
+
+First, generate a config file.
 
 ```yaml
 # config.yml
 
-test: 123
+foo: bar
 ```
 
-```kotlin
-// com/example/config/Config.kt
-package com.example.config
+Then, code the config class (Use object).
 
+```kotlin
 import org.int100.configuration.delegates.Property
-import org.int100.configuration.EConfigFileLoaders
+import org.int100.configuration.ConfigFileLoaders
 
-@Config(configPath="config.yml", formats=[EConfigFileLoaders.YAML])
-object Config {
-    val test by Property(name="test", defaultValue=123)
+@Config(configPath="config.yml", name="default", formats=[ConfigFileLoaders.YAML])
+object TestConfig {
+    val foo by Property<String>()
+    val number by Property(defaultValue = 123)
+    val call by Property<Any> { success, it ->
+        if (success) 
+            println("Call me $it")
+        else 
+            println(":( failed call")
+    }
 }
 ```
+
+Finally, load the config(s) in the main. 
 
 ```kotlin
-// com/example/Main.kt
-
-import com.example.config.Config
-import org.int100.configuration.ConfigInjector
-
 fun main(args: Array<String>) {
-    ConfigInjector.injectConfigs("com.example")
-    println(Config.test)
+    ConfigInjector.injectConfigs("") // or ConfigInjector.injectConfigs(setOf(TestConfig::class.java))
+    println(TestConfig.foo) // or GlobalConfig["default_foo"]
+    println(TestConfig.number)
 }
 ```
 
+Output:
+```
+:( failed call
+bar
+123
+```
 ## License
 Configuration licensed under **the MIT License**.
 

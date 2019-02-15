@@ -18,8 +18,8 @@ class ConfigLoader (
         private val refreshOnRead: Boolean,
         /** save on set values */
         private val saveOnSet: Boolean,
-        /** callbacks */
-        private val callback: IConfigLoader
+        /** save defaults when the config not exists */
+        private val saveDefault: Boolean
 ) {
     /**
      * Config Loader Builder
@@ -30,16 +30,16 @@ class ConfigLoader (
         private var default = mapOf<String, Any>()
         private var refreshOnRead = false
         private var saveOnSet = true
-        private var callback: IConfigLoader = object : IConfigLoader {}
+        private var saveDefault = true
 
         fun path(path: String) = this.apply { this.configPath = path }
         fun format(format: ConfigFileLoaders) = this.apply { this.format = format }
         fun default(default: Map<String, Any>) = this.apply { this.default = default }
         fun refreshOnRead(bool: Boolean) = this.apply { this.refreshOnRead = bool }
         fun saveOnSet(bool: Boolean) = this.apply { this.saveOnSet = bool }
-        fun callback(callback: IConfigLoader) = this.apply { this.callback = callback }
+        fun saveDefault(bool: Boolean) = this.apply { this.saveDefault = bool }
 
-        fun build() = ConfigLoader(configPath, format, default, refreshOnRead, saveOnSet, callback)
+        fun build() = ConfigLoader(configPath, format, default, refreshOnRead, saveOnSet, saveDefault)
     }
 
     private val file by lazy { File(this.path) }
@@ -70,7 +70,7 @@ class ConfigLoader (
         }
 
         if (!file.exists()) {
-            if (callback.onConfigNotExists()) {
+            if (saveDefault) {
                 file.createNewFile()
                 file.writeText(this.format.default())
             }

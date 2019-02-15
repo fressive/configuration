@@ -9,29 +9,33 @@ import kotlin.reflect.KProperty
  */
 class Property <T> (
         /** the name of the property in config file*/
-        val name: String,
+        val name: String? = null,
         /** default value */
-        defaultValue: T,
+        defaultValue: T? = null,
         /** can modify by `setValue`*/
-        val canModify: Boolean = false,
+        private val canModify: Boolean = false,
         /** call after loaded */
-        val onLoaded: (T) -> (Unit) = {}
+        val onLoaded: (Boolean, T?) -> (Unit) = { _, _ ->  }
 ) {
     var value = defaultValue
 
-    operator fun getValue(ref: Any, property: KProperty<*>): T {
+    operator fun getValue(ref: Any, property: KProperty<*>): T? {
         return value
     }
 
     @Suppress("UNCHECKED_CAST")
     operator fun <K> setValue(ref: Any, property: KProperty<*>, any: K) {
         if (canModify)
-            value = any as T
+            value = any as T?
         else
             throw IllegalAccessException()
     }
 
-    fun setValueByReflection(any: T) {
+    /**
+     * Set the value in [org.int100.configuration.ConfigInjector.injectConfigs].
+     * @hide
+     */
+    fun setValueByReflection(any: T?) {
         value = any
     }
 
